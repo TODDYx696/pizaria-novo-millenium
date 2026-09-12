@@ -3,67 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Pizzaria Novo Milenium — peça online. Pizzas artesanais em Bela Vista, São Paulo. Delivery e retirada.">
-  <meta name="theme-color" content="#0f0f0f">
-  <meta name="robots" content="index,follow">
-  <title>Pizzaria Novo Milenium | Peça online — Bela Vista, São Paulo</title>
-  <meta property="og:type" content="website">
+  <meta name="description" content="Pizzaria Novo Milenium — peça online. Pizzas em Bela Vista, São Paulo. Delivery e retirada.">
+  <meta name="theme-color" content="#c41e3a">
+  <title>Pizzaria Novo Milenium | Peça online</title>
   <meta property="og:title" content="Pizzaria Novo Milenium | Peça online">
-  <meta property="og:description" content="Cardápio digital. Escolha sua pizza, adicione ao carrinho e finalize pelo WhatsApp.">
-  <link rel="canonical" href="https://toddyx696.github.io/pizaria-novo-millenium/">
+  <meta property="og:description" content="Cardápio digital. Escolha, adicione ao carrinho e finalize pelo WhatsApp.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "Pizzaria Novo Milenium",
-    "servesCuisine": "Pizza",
-    "telephone": "+55 11 96224-8186",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "R. Paim, 211 - Lj 19",
-      "addressLocality": "São Paulo",
-      "addressRegion": "SP",
-      "postalCode": "01306-010",
-      "addressCountry": "BR"
-    }
-  }
+  {"@context":"https://schema.org","@type":"Restaurant","name":"Pizzaria Novo Milenium","servesCuisine":"Pizza","telephone":"+55 11 96224-8186","address":{"@type":"PostalAddress","streetAddress":"R. Paim, 211 - Lj 19","addressLocality":"São Paulo","addressRegion":"SP","postalCode":"01306-010","addressCountry":"BR"}}
   </script>
 </head>
 <body>
-  <header class="header">
-    <a href="/" class="logo" aria-label="Pizzaria Novo Milenium">NOVO <span>MILENIUM</span></a>
-    <div class="header-spacer"></div>
-    <button type="button" class="btn-cart" id="btn-cart" aria-label="Abrir carrinho">
-      <span>Carrinho</span>
-      <span class="cart-count" id="cart-count" hidden>0</span>
-      <span class="cart-total-label" id="cart-total-label"></span>
-    </button>
+  <header class="topbar">
+    <div class="topbar-main">
+      <a href="/" class="logo" aria-label="Pizzaria Novo Milenium">NOVO <span>MILENIUM</span></a>
+      <div class="topbar-actions">
+        <button type="button" class="icon-btn" id="btn-search-toggle" aria-label="Buscar">⌕</button>
+        <button type="button" class="btn-cart-desktop" id="btn-cart-desk" aria-label="Carrinho">
+          Carrinho <span id="cart-count-desk"></span>
+        </button>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span>Delivery e retirada</span>
+      <a href="https://wa.me/5511962248186" class="link" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
   </header>
 
-  <div class="toolbar">
-    <div class="search-wrap">
+  <div class="search-wrap" id="search-bar">
+    <div class="search-inner">
       <span class="search-icon" aria-hidden="true">⌕</span>
-      <input type="search" id="search" placeholder="Buscar pizza..." autocomplete="off" enterkeyhint="search">
+      <input type="search" id="search" placeholder="Buscar no cardápio..." autocomplete="off">
     </div>
-    <div class="categories" id="categories" role="tablist" aria-label="Categorias"></div>
   </div>
 
-  <main class="main">
-    <div class="product-grid" id="product-grid" role="list"></div>
-    <div class="products-empty" id="products-empty" hidden>
-      <p>Nenhuma pizza encontrada.</p>
-    </div>
+  <div class="tabs" id="categories" role="tablist" aria-label="Categorias"></div>
 
-    <aside class="store-info">
-      <p><strong id="store-name">Pizzaria Novo Milenium</strong></p>
-      <p id="store-address">R. Paim, 211 - Lj 19 - Bela Vista, São Paulo - SP, 01306-010</p>
-      <p>WhatsApp: <strong id="store-phone">(11) 96224-8186</strong></p>
-    </aside>
-  </main>
+  <section class="section" id="section-popular">
+    <h2 class="section-title">Os mais pedidos</h2>
+    <div class="scroll-row" id="popular-row"></div>
+  </section>
+
+  <div class="product-list" id="product-grid" role="list"></div>
+  <div class="products-empty" id="products-empty" hidden>
+    <p>Nenhuma pizza encontrada.</p>
+  </div>
+
+  <aside class="store-footer">
+    <p><strong id="store-name">Pizzaria Novo Milenium</strong></p>
+    <p id="store-address">R. Paim, 211 - Lj 19 - Bela Vista, São Paulo - SP, 01306-010</p>
+    <p>WhatsApp: <strong id="store-phone">(11) 96224-8186</strong></p>
+  </aside>
+
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <button type="button" class="nav-item active" id="nav-home" aria-label="Início">
+      <span class="nav-icon" aria-hidden="true">⌂</span>
+      <span>Início</span>
+    </button>
+    <button type="button" class="nav-item" id="nav-cart" aria-label="Carrinho">
+      <span class="nav-icon" aria-hidden="true">🛒</span>
+      <span>Carrinho</span>
+      <span class="nav-badge" id="cart-count" hidden>0</span>
+    </button>
+  </nav>
 
   <div class="overlay" id="modal-product" hidden>
     <div class="backdrop" id="mp-backdrop"></div>
@@ -102,7 +107,7 @@
         </div>
         <div class="field">
           <label for="mp-note">Observação (opcional)</label>
-          <textarea id="mp-note" placeholder="Ex: sem cebola, bem assada..."></textarea>
+          <textarea id="mp-note" placeholder="Ex: sem cebola..."></textarea>
         </div>
       </div>
       <div class="sheet-footer">
@@ -115,7 +120,7 @@
     <div class="backdrop" id="cart-backdrop"></div>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
       <div class="sheet-header">
-        <h2 id="cart-title">Seu pedido</h2>
+        <h2 id="cart-title">Carrinho</h2>
         <button type="button" class="btn-close" id="cart-close" aria-label="Fechar">×</button>
       </div>
       <div class="sheet-body">
@@ -153,20 +158,14 @@
         </div>
         <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px">Tipo de pedido</p>
         <div class="order-type">
-          <label>
-            <input type="radio" name="order-type" value="entrega" checked>
-            <span>Entrega</span>
-          </label>
-          <label>
-            <input type="radio" name="order-type" value="retirada">
-            <span>Retirada</span>
-          </label>
+          <label><input type="radio" name="order-type" value="entrega" checked><span>Entrega</span></label>
+          <label><input type="radio" name="order-type" value="retirada"><span>Retirada</span></label>
         </div>
         <div id="address-fields">
           <div class="address-grid">
             <div class="field">
               <label for="ck-street">Rua *</label>
-              <input type="text" id="ck-street" name="street" autocomplete="street-address" placeholder="Rua">
+              <input type="text" id="ck-street" name="street" placeholder="Rua">
             </div>
             <div class="field">
               <label for="ck-number">Nº *</label>
@@ -183,7 +182,7 @@
           </div>
           <div class="field">
             <label for="ck-cep">CEP</label>
-            <input type="text" id="ck-cep" name="cep" inputmode="numeric" placeholder="00000-000" autocomplete="postal-code">
+            <input type="text" id="ck-cep" name="cep" inputmode="numeric" placeholder="00000-000">
           </div>
           <div class="field">
             <label for="ck-reference">Ponto de referência</label>
@@ -191,12 +190,10 @@
           </div>
         </div>
         <div class="field">
-          <label for="ck-notes">Alguma observação sobre seu pedido?</label>
+          <label for="ck-notes">Observação do pedido</label>
           <textarea id="ck-notes" name="notes" placeholder="Opcional"></textarea>
         </div>
-        <p style="font-size:0.8rem;color:var(--soft);margin-top:8px">
-          O pedido será enviado pelo WhatsApp da pizzaria. Formas de pagamento (PIX, dinheiro, cartão) combinadas no atendimento.
-        </p>
+        <p class="note-pay">O pedido será enviado pelo WhatsApp. Pagamento (PIX, dinheiro, cartão) combinado no atendimento.</p>
       </form>
       <div class="sheet-footer">
         <button type="submit" form="form-checkout" class="btn-primary">Finalizar pedido</button>
