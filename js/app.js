@@ -13,17 +13,9 @@
   const esc = (value) => String(value ?? "").replace(/[&<>\"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[char]));
 
   function loadCart() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(CART_KEY));
-      return Array.isArray(saved) ? saved : [];
-    } catch (_) { return []; }
+    try { const saved = JSON.parse(localStorage.getItem(CART_KEY)); return Array.isArray(saved) ? saved : []; } catch (_) { return []; }
   }
-
-  function saveCart() {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    updateCartBadge();
-  }
-
+  function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); }
   function cartCount() { return cart.reduce((total, item) => total + item.qty, 0); }
   function cartTotal() { return cart.reduce((total, item) => total + item.price * item.qty, 0); }
   function uid() { return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`; }
@@ -69,22 +61,18 @@
   function openProduct(id) {
     const product = window.PRODUCTS.find((item) => item.id === id);
     if (!product || product.priceG == null || product.priceB == null) return;
-    selectedProduct = product;
-    selectedQty = 1;
-    $("mp-num").textContent = product.number;
-    $("mp-name").textContent = product.name;
-    $("mp-desc").textContent = product.desc;
-    $("mp-price-g").textContent = money(product.priceG);
-    $("mp-price-b").textContent = money(product.priceB);
-    $("mp-qty").textContent = "1";
-    $("mp-note").value = "";
+    selectedProduct = product; selectedQty = 1;
+    $("mp-num").textContent = product.number; $("mp-name").textContent = product.name; $("mp-desc").textContent = product.desc;
+    $("mp-price-g").textContent = money(product.priceG); $("mp-price-b").textContent = money(product.priceB); $("mp-qty").textContent = "1"; $("mp-note").value = "";
     document.querySelectorAll('input[name="size"]').forEach((radio) => { radio.checked = radio.value === "grande"; });
-    showOverlay("modal-product");
-    $("mp-close").focus();
+    showOverlay("modal-product"); $("mp-close").focus();
   }
 
   function showOverlay(id) { $(id).hidden = false; document.body.classList.add("modal-open"); }
-  function hideOverlay(id) { $(id).hidden = true; if (!["modal-product", "drawer-cart", "modal-checkout"].some((name) => !$(name).hidden)) document.body.classList.remove("modal-open"); }
+  function hideOverlay(id) {
+    $(id).hidden = true;
+    if (!["modal-product", "drawer-cart", "modal-checkout"].some((name) => !$(name).hidden)) document.body.classList.remove("modal-open");
+  }
 
   function addToCart() {
     if (!selectedProduct) return;
@@ -92,17 +80,11 @@
     const price = size === "broto" ? selectedProduct.priceB : selectedProduct.priceG;
     const note = $("mp-note").value.trim();
     cart.push({ uid: uid(), productId: selectedProduct.id, number: selectedProduct.number, name: selectedProduct.name, size: size === "broto" ? "Broto" : "Grande", price, qty: selectedQty, note });
-    saveCart();
-    hideOverlay("modal-product");
-    openCart();
+    saveCart(); hideOverlay("modal-product"); openCart();
   }
 
   function renderCart() {
-    const empty = $("cart-empty");
-    const footer = $("cart-footer");
-    empty.hidden = cart.length !== 0;
-    footer.hidden = cart.length === 0;
-    $("cart-subtotal").textContent = money(cartTotal());
+    $("cart-empty").hidden = cart.length !== 0; $("cart-footer").hidden = cart.length === 0; $("cart-subtotal").textContent = money(cartTotal());
     $("cart-list").innerHTML = cart.map((item) => `<div class="cart-item" data-uid="${item.uid}">
       <div class="cart-item-info"><strong>${esc(item.number)} — ${esc(item.name)}</strong><span class="cart-item-meta">${esc(item.size)}${item.note ? ` · ${esc(item.note)}` : ""}</span><span class="cart-item-price">${money(item.price * item.qty)}</span></div>
       <div class="cart-item-actions"><button type="button" class="qty-btn" data-action="dec" data-uid="${item.uid}" aria-label="Diminuir">−</button><output>${item.qty}</output><button type="button" class="qty-btn" data-action="inc" data-uid="${item.uid}" aria-label="Aumentar">+</button><button type="button" class="btn-remove" data-uid="${item.uid}">Remover</button></div>
@@ -111,25 +93,10 @@
 
   function openCart() { renderCart(); showOverlay("drawer-cart"); $("cart-close").focus(); $("nav-home")?.classList.remove("active"); $("nav-cart")?.classList.add("active"); }
   function closeCart() { hideOverlay("drawer-cart"); $("nav-cart")?.classList.remove("active"); $("nav-home")?.classList.add("active"); }
+  function changeQty(id, delta) { const item = cart.find((entry) => entry.uid === id); if (!item) return; item.qty += delta; if (item.qty <= 0) cart = cart.filter((entry) => entry.uid !== id); saveCart(); renderCart(); }
 
-  function changeQty(id, delta) {
-    const item = cart.find((entry) => entry.uid === id);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) cart = cart.filter((entry) => entry.uid !== id);
-    saveCart(); renderCart();
-  }
-
-  function openCheckout() {
-    if (!cart.length) return;
-    closeCart();
-    showOverlay("modal-checkout");
-    toggleAddressFields();
-    $("ck-name").focus();
-  }
-
+  function openCheckout() { if (!cart.length) return; closeCart(); showOverlay("modal-checkout"); toggleAddressFields(); $("ck-name").focus(); }
   function closeCheckout() { hideOverlay("modal-checkout"); }
-
   function toggleAddressFields() {
     const delivery = document.querySelector('input[name="order-type"]:checked')?.value === "entrega";
     $("address-fields").hidden = !delivery;
@@ -144,8 +111,7 @@
     }
     lines.push("", "*Itens:*");
     cart.forEach((item) => { lines.push(`${item.qty}x ${item.number} — ${item.name} (${item.size}) — ${money(item.price * item.qty)}`); if (item.note) lines.push(`Obs.: ${item.note}`); });
-    lines.push("", `*Total:* ${money(cartTotal())}`);
-    if (data.notes) lines.push(`*Observação:* ${data.notes}`);
+    lines.push("", `*Total:* ${money(cartTotal())}`); if (data.notes) lines.push(`*Observação:* ${data.notes}`);
     return lines.join("\n");
   }
 
@@ -158,15 +124,12 @@
       street: form.elements.street?.value.trim() || "", number: form.elements.number?.value.trim() || "", complement: form.elements.complement?.value.trim() || "", neighborhood: form.elements.neighborhood?.value.trim() || "", cep: form.elements.cep?.value.trim() || "", reference: form.elements.reference?.value.trim() || "", notes: form.elements.notes.value.trim()
     };
     const url = `https://wa.me/${window.STORE.phone}?text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
-    cart = [];
-    saveCart();
-    closeCheckout();
-    window.open(url, "_blank", "noopener,noreferrer");
+    cart = []; saveCart(); closeCheckout(); window.open(url, "_blank", "noopener,noreferrer");
   }
 
   function bindEvents() {
     $("categories").addEventListener("click", (event) => { const button = event.target.closest("[data-cat]"); if (!button) return; activeCategory = button.dataset.cat; renderCategories(); renderProducts(); });
-    $("product-grid").addEventListener("click", (event) => { const button = event.target.closest(".btn-plus"); if (button && !button.disabled) openProduct(Number(button.dataset.id)); else { const item = event.target.closest(".product-item"); if (item) openProduct(Number(item.dataset.id)); } });
+    $("product-grid").addEventListener("click", (event) => { const button = event.target.closest(".btn-plus"); if (button && !button.disabled) return openProduct(Number(button.dataset.id)); const item = event.target.closest(".product-item"); if (item) openProduct(Number(item.dataset.id)); });
     $("product-grid").addEventListener("keydown", (event) => { if (event.key !== "Enter" && event.key !== " ") return; const item = event.target.closest(".product-item"); if (item) { event.preventDefault(); openProduct(Number(item.dataset.id)); } });
     $("search").addEventListener("input", (event) => { searchQuery = event.target.value; $("search-clear").hidden = !searchQuery; renderProducts(); });
     $("search-clear").addEventListener("click", () => { $("search").value = ""; searchQuery = ""; $("search-clear").hidden = true; renderProducts(); $("search").focus(); });
@@ -181,12 +144,6 @@
     document.addEventListener("keydown", (event) => { if (event.key === "Escape") { hideOverlay("modal-product"); closeCart(); closeCheckout(); } });
   }
 
-  function init() {
-    $("store-name")?.textContent = window.STORE.name;
-    $("store-phone")?.textContent = window.STORE.phoneDisplay;
-    $("store-address")?.textContent = window.STORE.address;
-    renderCategories(); renderProducts(); updateCartBadge(); bindEvents();
-  }
-
+  function init() { renderCategories(); renderProducts(); updateCartBadge(); bindEvents(); toggleAddressFields(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
