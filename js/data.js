@@ -10,7 +10,8 @@ window.STORE = {
 };
 
 const noPhoto = null;
-const pizza = (id, number, name, desc, priceG, priceB) => ({ id, number, name, desc, category: "pizzas", priceG, priceB, img: noPhoto });
+const demoCalabresaPhoto = "https://images.unsplash.com/photo-1576458088443-04a19bb13da6?auto=format&fit=crop&fm=jpg&q=80&w=1200";
+const pizza = (id, number, name, desc, priceG, priceB, img = noPhoto) => ({ id, number, name, desc, category: "pizzas", priceG, priceB, img });
 
 window.PRODUCTS = [
   pizza(1,"01","Abobrinha","Mussarela, Abobrinha e Alho",51.90,36.90),
@@ -27,7 +28,7 @@ window.PRODUCTS = [
   pizza(12,"12","Bauru","Presunto, Mussarela e Tomate",43.90,31.90),
   pizza(13,"13","Brócolis","Brócolis Temperado e Mussarela",51.90,36.90),
   pizza(14,"14","Caipira","Frango, Mussarela e Milho",53.90,41.90),
-  pizza(15,"15","Calabresa","Calabresa coberta com Cebola",43.90,31.90),
+  pizza(15,"15","Calabresa","Calabresa coberta com Cebola",43.90,31.90,demoCalabresaPhoto),
   pizza(16,"16","Calzone Novo Milênio","Lombo Canadense, Ovo, Palmito e Mussarela",51.90,36.90),
   pizza(17,"17","Camarão com Catupiry","Camarão com Catupiry ou Mussarela",101.90,80.90),
   pizza(18,"18","Carne de Sol","Carne de Sol, Mussarela, Cebola e Brócolis",56.90,36.90),
